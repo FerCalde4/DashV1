@@ -2,7 +2,7 @@
   "name": "dashv1",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
@@ -10,9 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.21.1",
-    "node-telegram-bot-api": "^0.63.0",
-    "telegraf": "^4.16.3"
-  },
-  "devDependencies": {}
+    "node-telegram-bot-api": "^0.66.0",
+    "telegraf": "^4.16.3",
+    "express": "^4.21.1"
+  }
 }
