@@ -1,5 +1,5 @@
 // /api/telegram-bot.js
-const TelegramBot = require('node-telegram-bot-api');
+const TelegramBot = require('../node_modules/node-telegram-bot-api');
 
 // Get environment variables from Vercel
 const TOKEN = process.env.TELEGRAM_TOKEN;
