@@ -3,7 +3,7 @@
  */
 /* eslint-disable no-console */
 
-const TOKEN = process.env.TELEGRAM_TOKEN;
+const TOKEN = process.env.TELEGRAM_TOKEN || '8163517776:AAFaqyuV3HGXVg4D4YHt15DmbDNve5GVRI8';
 const gameName = process.env.TELEGRAM_GAMENAME || 'testingDashGame';
 // Specify '0' to use ngrok i.e. localhost tunneling
 let url = process.env.URL || 'https://fercalde4.github.io/DashV1/';
