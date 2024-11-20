@@ -7,6 +7,10 @@ const gameName = process.env.TELEGRAM_GAMENAME;
 const url = process.env.URL;
 
 const bot = new TelegramBot(TOKEN, { polling: true });
+const app = express();
+
+// Basic configurations
+app.set('view engine', 'ejs');
 
 // Handle /start command
 bot.onText(/\/start/, (msg) => {
@@ -16,6 +20,11 @@ bot.onText(/\/start/, (msg) => {
 // Handle callback queries
 bot.on('callback_query', (callbackQuery) => {
   bot.answerCallbackQuery(callbackQuery.id, { url });
+});
+
+// Render the HTML game
+app.get('/', function requestListener(req, res) {
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 module.exports = (req, res) => {
