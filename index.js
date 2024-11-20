@@ -7,7 +7,6 @@ require('dotenv').config();
 
 const TOKEN = process.env.TELEGRAM_TOKEN;
 const gameName = process.env.TELEGRAM_GAMENAME;
-// Specify '0' to use ngrok i.e. localhost tunneling
 let url = process.env.URL;
 const port = process.env.PORT || 8080;
 
@@ -20,19 +19,6 @@ const app = express();
 
 // Basic configurations
 app.set('view engine', 'ejs');
-
-// Tunnel to localhost.
-// This is just for demo purposes.
-// In your application, you will be using a static URL, probably that
-// you paid for. :)
-if (url === '0') {
-  const ngrok = require('ngrok');
-  ngrok.connect(port, function onConnect(error, u) {
-    if (error) throw error;
-    url = u;
-    console.log(`Game tunneled at ${url}`);
-  });
-}
 
 // Matches /start
 bot.onText(/\/start/, function onPhotoText(msg) {
