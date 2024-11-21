@@ -13,6 +13,7 @@ console.log('Game Name:', process.env.TELEGRAM_GAMENAME);
 const TOKEN = process.env.TELEGRAM_TOKEN;
 const gameName = process.env.TELEGRAM_GAMENAME;
 const url = "https://fercalde4.github.io/DashV1/";
+const urlVercel = "https://dash-v1-teal.vercel.app/";
 
 // Validate environment variables
 if (!TOKEN || !gameName || !url) {
@@ -27,7 +28,7 @@ try {
   bot = new TelegramBot(TOKEN);
   
   // Set the webhook URL so Telegram knows where to send the updates
-  bot.setWebHook(`${url}/api/telegram-bot`);  // This will register the webhook with the provided URL
+  bot.setWebHook(`${urlVercel}/api/telegram-bot`);  // This will register the webhook with the provided URL
 
   // Handle the /start command inside the try block
   bot.onText(/\/start/, (msg) => {
