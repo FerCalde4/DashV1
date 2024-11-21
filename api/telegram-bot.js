@@ -1,4 +1,3 @@
-
 // Import the necessary packages
 require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
@@ -12,8 +11,8 @@ console.log('Game Name:', process.env.TELEGRAM_GAMENAME);
 // Get the environment variables (from Vercel's environment settings)
 const TOKEN = process.env.TELEGRAM_TOKEN;
 const gameName = process.env.TELEGRAM_GAMENAME;
-const url = "https://fercalde4.github.io/DashV1/";
-const urlVercel = "https://dash-v1-teal.vercel.app/";
+const url = "https://fercalde4.github.io/DashV1/";  // Your game URL
+const urlVercel = "https://dash-v1-teal.vercel.app/"; // Your Vercel URL
 
 // Validate environment variables
 if (!TOKEN || !gameName || !url) {
@@ -25,10 +24,17 @@ let bot;
 
 // Initialize the bot inside the try block
 try {
-  bot = new TelegramBot(TOKEN);
-  
+  bot = new TelegramBot(TOKEN, { polling: false }); // Set polling to false when using webhooks
+
   // Set the webhook URL so Telegram knows where to send the updates
-  bot.setWebHook(`${urlVercel}/api/telegram-bot`);  // This will register the webhook with the provided URL
+  bot.setWebHook(`${urlVercel}/api/telegram-bot`)
+    .then(response => {
+      console.log('Webhook set successfully:', response);
+    })
+    .catch(error => {
+      console.error('Error setting webhook:', error);
+      process.exit(1); // Exit if there is an error in setting the webhook
+    });
 
   // Handle the /start command inside the try block
   bot.onText(/\/start/, (msg) => {
