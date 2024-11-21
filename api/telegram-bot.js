@@ -14,7 +14,7 @@ console.log('Game Name:', process.env.TELEGRAM_GAMENAME);
 // Get the environment variables (from Vercel's environment settings)
 const TOKEN = process.env.TELEGRAM_TOKEN;
 const gameName = process.env.TELEGRAM_GAMENAME;
-const url = 'https://fercalde4.github.io/DashV1/'; // Your game URL
+const url = 'https://dash-v1-teal.vercel.app/'; // Your game URL
 const urlVercel = 'https://dash-v1-teal.vercel.app/'; // Your Vercel URL
 
 // Validate environment variables
@@ -62,6 +62,7 @@ module.exports = {
   },
 };
  module.exports = (req, res) => {
+  console.log('running-> url: ', url)
   // Send a confirmation response indicating the bot is up and running
   res.status(200).send('Telegram bot is running!');
 
