@@ -21,14 +21,21 @@ app.use(express.static(path.join(__dirname, 'public'))); // For static assets (o
 
 // Matches /start
 bot.onText(/\/start/, function (msg) {
+  const userId = msg.chat.id;  // Numerical ID (unique)
+  const username = msg.chat.username;  // Username (optional, can be null)
+  
   console.log('Start command received from chat ID:', msg.chat.id);
+  console.log('User ID:', userId);
+  console.log('Username:', username);
+
   bot.sendGame(msg.chat.id, gameName);
 });
 
 // Handle callback queries (for when users interact with the game link)
 bot.on('callback_query', function (callbackQuery) {
   console.log('Callback query received:', callbackQuery);
-  bot.answerCallbackQuery(callbackQuery.id, { url });
+  const gameUrlWithUserId = `${url}?userId=${callbackQuery.from.id}`;
+  bot.answerCallbackQuery(callbackQuery.id, { url: gameUrlWithUserId });
 });
 
 // Render the HTML game
@@ -63,9 +70,22 @@ app.get('/leaderboard', async (req, res) => {
   }
 
   try {
+    // Fetch the high scores from the Telegram bot
     const response = await bot.getGameHighScores({ user_id: userId });
-    console.log('Leaderboard fetched:', response);
-    res.json({ success: true, data: response });
+
+    // Now, fetch the username for each player in the leaderboard
+    const leaderboard = await Promise.all(response.map(async (scoreEntry) => {
+      const user = await bot.getChat(scoreEntry.user_id);  // Fetch the user's chat information
+      return {
+        rank: scoreEntry.position,  // Optional: position can be set manually if needed
+        userId: scoreEntry.user_id,
+        username: user.username,  // Get the username from the chat data
+        score: scoreEntry.score,
+      };
+    }));
+
+    console.log('Leaderboard fetched:', leaderboard);
+    res.json({ success: true, leaderboard });
   } catch (error) {
     console.error('Error fetching leaderboard:', error);
     res.status(500).json({ success: false, error: error.message });
