@@ -4,6 +4,7 @@ require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
 
 // Debugging logs
+console.log('Environment Variables:', process.env);
 console.log('TELEGRAM_TOKEN:', process.env.TELEGRAM_TOKEN);
 console.log('Game Name:', process.env.TELEGRAM_GAMENAME);
 console.log('URL:', process.env.URL);
@@ -19,18 +20,29 @@ if (!TOKEN || !gameName || !url) {
   process.exit(1); // Exit if any variable is undefined
 }
 
-// Create a new Telegram bot instance
-const bot = new TelegramBot(TOKEN, { polling: true });
+let bot;
 
-// Handle the /start command
-bot.onText(/\/start/, (msg) => {
-  bot.sendGame(msg.chat.id, gameName);
-});
+// Initialize the bot inside the try block
+try {
+  bot = new TelegramBot(TOKEN, { polling: true });
+  
+  // Set the webhook URL so Telegram knows where to send the updates
+  bot.setWebHook(`${url}/api/telegram-bot`);  // This will register the webhook with the provided URL
 
-// Handle callback queries
-bot.on('callback_query', (callbackQuery) => {
-  bot.answerCallbackQuery(callbackQuery.id, { url });
-});
+  // Handle the /start command inside the try block
+  bot.onText(/\/start/, (msg) => {
+    bot.sendGame(msg.chat.id, gameName);
+  });
+
+  // Handle callback queries inside the try block
+  bot.on('callback_query', (callbackQuery) => {
+    bot.answerCallbackQuery(callbackQuery.id, { url });
+  });
+
+} catch (error) {
+  console.error('Error starting the bot:', error);
+  process.exit(1); // Exit if there is an error in bot creation
+}
 
 // Define the serverless function handler for Vercel
 module.exports = (req, res) => {
