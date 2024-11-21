@@ -62,10 +62,11 @@ const initializeBot = async () => {
 //   },
 // };
  module.exports = async (req, res) => {
-  console.log('running-> url: ', url)
-
+  console.log('initializeBot - request catched') 
   // Initialize the bot asynchronously
-  await initializeBot();
+   await initializeBot();
+   console.log('running-> url: ', url)
+   console.log('req: ', req, 'res: ', res)
 
 
   // Send a confirmation response indicating the bot is up and running
