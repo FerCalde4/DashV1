@@ -14,8 +14,8 @@ console.log('Game Name:', process.env.TELEGRAM_GAMENAME);
 // Get the environment variables (from Vercel's environment settings)
 const TOKEN = process.env.TELEGRAM_TOKEN;
 const gameName = process.env.TELEGRAM_GAMENAME;
-const url = "https://fercalde4.github.io/DashV1/"; // Your game URL
-const urlVercel = "https://dash-v1-teal.vercel.app/"; // Your Vercel URL
+const url = 'https://fercalde4.github.io/DashV1/'; // Your game URL
+const urlVercel = 'https://dash-v1-teal.vercel.app/'; // Your Vercel URL
 
 // Validate environment variables
 if (!TOKEN || !gameName || !url) {
@@ -43,6 +43,14 @@ const initializeBot = async () => {
       bot.answerCallbackQuery(callbackQuery.id, { url });
     });
 
+    // Define the serverless function handler for Vercel
+    module.exports = (req, res) => {
+      // Send a confirmation response indicating the bot is up and running
+      res.status(200).send('Telegram bot is running!');
+    
+      // Your webhook handling is done by TelegramBot library automatically when it receives updates
+    };
+    
   } catch (error) {
     console.error('Error starting the bot:', error);
     process.exit(1); // Exit if there is an error in bot creation
@@ -52,10 +60,3 @@ const initializeBot = async () => {
 // Initialize the bot asynchronously
 initializeBot();
 
-// Define the serverless function handler for Vercel
-module.exports = (req, res) => {
-  // Send a confirmation response indicating the bot is up and running
-  res.status(200).send('Telegram bot is running!');
-
-  // Your webhook handling is done by TelegramBot library automatically when it receives updates
-};
