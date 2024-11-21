@@ -7,12 +7,12 @@ const TelegramBot = require('node-telegram-bot-api');
 console.log('Environment Variables:', process.env);
 console.log('TELEGRAM_TOKEN:', process.env.TELEGRAM_TOKEN);
 console.log('Game Name:', process.env.TELEGRAM_GAMENAME);
-console.log('URL:', process.env.URL);
+//console.log('URL:', process.env.URL);
 
 // Get the environment variables (from Vercel's environment settings)
 const TOKEN = process.env.TELEGRAM_TOKEN;
 const gameName = process.env.TELEGRAM_GAMENAME;
-const url = process.env.URL;
+const url = "https://fercalde4.github.io/DashV1/";
 
 // Validate environment variables
 if (!TOKEN || !gameName || !url) {
