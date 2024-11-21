@@ -1,6 +1,6 @@
-export const config = {
-  maxDuration:60,
-};
+// export const config = {
+//   maxDuration:60,
+// };
 
 // Import the necessary packages
 require('dotenv').config();
@@ -55,6 +55,12 @@ const initializeBot = async () => {
 initializeBot();
 
  // Define the serverless function handler for Vercel
+ // With this:
+module.exports = {
+  config: {
+    maxDuration: 60,
+  },
+};
  module.exports = (req, res) => {
   // Send a confirmation response indicating the bot is up and running
   res.status(200).send('Telegram bot is running!');
