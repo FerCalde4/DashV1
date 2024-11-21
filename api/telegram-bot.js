@@ -35,16 +35,16 @@ const initializeBot = async () => {
 
     // Handle the /start command
     bot.onText(/\/start/, (msg) => {
+      console.log('start received:', msg);
       bot.sendGame(msg.chat.id, gameName);
     });
 
     // Handle callback queries
     bot.on('callback_query', (callbackQuery) => {
+      console.log('callback_query:', callbackQuery, ". url: ", url);
       bot.answerCallbackQuery(callbackQuery.id, { url });
     });
-
-   
-
+ 
   } catch (error) {
     console.error('Error starting the bot:', error);
     process.exit(1); // Exit if there is an error in bot creation
