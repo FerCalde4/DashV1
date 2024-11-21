@@ -51,18 +51,23 @@ const initializeBot = async () => {
   }
 };
 
-// Initialize the bot asynchronously
-initializeBot();
+// // Initialize the bot asynchronously
+// initializeBot();
 
- // Define the serverless function handler for Vercel
- // With this:
-module.exports = {
-  config: {
-    maxDuration: 60,
-  },
-};
- module.exports = (req, res) => {
+// Define the serverless function handler for Vercel
+//  // With this:
+// module.exports = {
+  //   config: {
+    //     maxDuration: 60,
+//   },
+// };
+ module.exports = async (req, res) => {
   console.log('running-> url: ', url)
+
+  // Initialize the bot asynchronously
+  await initializeBot();
+
+
   // Send a confirmation response indicating the bot is up and running
   res.status(200).send('Telegram bot is running!');
 
