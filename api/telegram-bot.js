@@ -24,7 +24,7 @@ let bot;
 
 // Initialize the bot inside the try block
 try {
-  bot = new TelegramBot(TOKEN, { polling: true });
+  bot = new TelegramBot(TOKEN);
   
   // Set the webhook URL so Telegram knows where to send the updates
   bot.setWebHook(`${url}/api/telegram-bot`);  // This will register the webhook with the provided URL
