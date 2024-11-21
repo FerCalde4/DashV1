@@ -1,3 +1,7 @@
+export const config = {
+  maxDuration:60,
+};
+
 // Import the necessary packages
 require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
