@@ -36,6 +36,13 @@ try {
       process.exit(1); // Exit if there is an error in setting the webhook
     });
 
+    
+  } catch (error) {
+    console.error('Error starting the bot:', error);
+    process.exit(1); // Exit if there is an error in bot creation
+  }
+
+
   // Handle the /start command inside the try block
   bot.onText(/\/start/, (msg) => {
     bot.sendGame(msg.chat.id, gameName);
@@ -43,13 +50,8 @@ try {
 
   // Handle callback queries inside the try block
   bot.on('callback_query', (callbackQuery) => {
-    bot.answerCallbackQuery(callbackQuery.id, { url });
+    bot.answerCallbackQuery(callbackQuery.id, { urlVercel });
   });
-
-} catch (error) {
-  console.error('Error starting the bot:', error);
-  process.exit(1); // Exit if there is an error in bot creation
-}
 
 // Define the serverless function handler for Vercel
 module.exports = (req, res) => {
