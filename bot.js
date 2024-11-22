@@ -28,7 +28,8 @@ bot.onText(/\/start/, function (msg) {
   console.log('User ID:', userId);
   console.log('Username:', username);
 
-  bot.sendGame(msg.chat.id, gameName);
+  const gameUrlWithParams = `${url}?userId=${userId}&username=${encodeURIComponent(username)}`;
+  bot.sendGame(msg.chat.id, gameName, { reply_markup: { inline_keyboard: [[{ text: "Play Game", url: gameUrlWithParams }]] } });
 });
 
 // Handle callback queries (for when users interact with the game link)
