@@ -100,6 +100,24 @@ app.get('/leaderboard', async (req, res) => {
   }
 });
 
+// Ping route to prevent the server from sleeping
+app.get('/ping', (req, res) => {
+  res.status(200).send('Server is alive!');
+});
+
+// Self-ping to keep the server alive
+const PING_INTERVAL = 25 * 60 * 1000; // 25 minutes
+setInterval(() => {
+  const pingUrl = `${url}/ping`; // Your app's /ping endpoint
+  console.log(`Pinging server to keep alive: ${pingUrl}`);
+
+  https.get(pingUrl, (res) => {
+    console.log(`Ping status: ${res.statusCode}`);
+  }).on('error', (err) => {
+    console.error('Error pinging server:', err);
+  });
+}, PING_INTERVAL);
+
 // Bind server to Heroku's dynamic port or default port
 app.listen(PORT, function () {
   console.log(`Server is listening on port ${PORT}`);
