@@ -132,6 +132,12 @@ setInterval(() => {
   });
 }, PING_INTERVAL);
 
+// Webhook handler to receive updates from Telegram
+app.post(`/bot${TOKEN}`, (req, res) => {
+  bot.processUpdate(req.body);  // Process the incoming update
+  res.sendStatus(200);  // Acknowledge Telegram that the update was received
+});
+
 // Bind server to Heroku's dynamic port or default port
 app.listen(PORT, function () {
   console.log(`Server is listening on port ${PORT}`);
