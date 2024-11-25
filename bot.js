@@ -1,6 +1,7 @@
 require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
+const cors = require('cors');
 const https = require('https');
 const path = require('path');
 
@@ -28,6 +29,9 @@ const app = express();
 
 // Middleware for parsing JSON data
 app.use(express.json());
+
+// Enable CORS
+app.use(cors()); // Apply CORS middleware
 
 // Basic configurations
 app.set('view engine', 'ejs');
