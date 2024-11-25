@@ -21,16 +21,23 @@ app.use(express.static(path.join(__dirname, 'public'))); // For static assets (o
 
 // Matches /start
 bot.onText(/\/start/, function (msg) {
-  const userId = msg.chat.id;  // Numerical ID (unique)
-  const username = msg.chat.username;  // Username (optional, can be null)
-  
-  console.log('Start command received from chat ID:', msg.chat.id);
-  console.log('User ID:', userId);
+  const userId = msg.chat.id; // Numerical ID (unique)
+  const username = msg.chat.username || "Anonymous"; // Fallback to "Anonymous" if username is null
+
+  console.log('Start command received from chat ID:', userId);
   console.log('Username:', username);
 
-  const gameUrlWithParams = `${url}?userId=${userId}&username=${encodeURIComponent(username)}`;
-  bot.sendGame(msg.chat.id, gameName, { reply_markup: { inline_keyboard: [[{ text: "Play Game", url: gameUrlWithParams }]] } });
+  // const gameUrlWithParams = `${url}?userId=${userId}&username=${encodeURIComponent(username)}`;
+
+  bot.sendGame(msg.chat.id, gameName, {
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: "Play Game", callback_game: {} }] // Correct way to send a game
+      ]
+    }
+  }).catch(err => console.error("Error sending game:", err));
 });
+
 
 // Handle callback queries (for when users interact with the game link)
 bot.on('callback_query', function (callbackQuery) {
