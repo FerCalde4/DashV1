@@ -1,15 +1,29 @@
 require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
+const https = require('https');
 const path = require('path');
 
 const TOKEN = process.env.TELEGRAM_TOKEN;
 const gameName = process.env.TELEGRAM_GAMENAME;
 let url = process.env.URL;
+let urlBackend = process.env.URLBACKEND
 
 const PORT = process.env.PORT || 3000; // Use Heroku's dynamic port or default to 3000
+const USE_WEBHOOK = process.env.USE_WEBHOOK === 'true'; // Enable webhook mode via an environment variable
 
-const bot = new TelegramBot(TOKEN, { polling: true });
+// Bot initialization
+let bot;
+if (USE_WEBHOOK) {
+    const webhookUrl = `${urlBackend}/bot${TOKEN}`;
+    bot = new TelegramBot(TOKEN);
+    bot.setWebHook(webhookUrl); // Configure webhook
+    console.log('Running in webhook mode');
+} else {
+    bot = new TelegramBot(TOKEN, { polling: true }); // Use polling mode
+    console.log('Running in polling mode');
+}
+
 const app = express();
 
 // Middleware for parsing JSON data
@@ -108,9 +122,9 @@ app.get('/ping', (req, res) => {
 // Self-ping to keep the server alive
 const PING_INTERVAL = 25 * 60 * 1000; // 25 minutes
 setInterval(() => {
-  const pingUrl = `${url}/ping`; // Your app's /ping endpoint
+  const pingUrl = `${urlBackend}/ping`; // Your app's /ping endpoint
   console.log(`Pinging server to keep alive: ${pingUrl}`);
-
+  
   https.get(pingUrl, (res) => {
     console.log(`Ping status: ${res.statusCode}`);
   }).on('error', (err) => {
