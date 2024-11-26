@@ -31,6 +31,7 @@ const app = express();
 
 // Middleware for parsing JSON data
 app.use(express.json());
+app.use(express.text()); // Parse plain text bodies
 
 // Enable CORS
 app.use(cors()); // Apply CORS middleware
@@ -73,6 +74,8 @@ app.get('/', function (req, res) {
 
 // API endpoint to submit a score
 app.post('/submitScore', async (req, res) => {
+
+  console.log('[Submit Score] - Received body:', req.body);
   const { userId, username, score, web3wallet } = req.body;
 
   if (!username || username === undefined) {
