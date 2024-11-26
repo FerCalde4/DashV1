@@ -75,13 +75,15 @@ app.get('/', function (req, res) {
 app.post('/submitScore', async (req, res) => {
   const { userId, username, score, web3wallet } = req.body;
 
-  if (!username) {
+  if (!username || username === undefined) {
     username = "Guest"
+    console.log(`[Submit Score] Error: Username was null or empty (undefined). New username: ${username}.`);
   }
 
   if (!userId || !username || score === undefined) {
     return res.status(400).json({ success: false, error: 'Missing required fields' });
   }
+  console.log(`[Submit Score]: userId: ${userId}. username: ${username}. score: ${score}`);
 
   try {
     // Check if the user already exists
