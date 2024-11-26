@@ -130,7 +130,7 @@ app.get('/ping', (req, res) => {
 });
 
 // Self-ping to keep the server alive
-const PING_INTERVAL = 5 * 60 * 1000; // 5 minutes
+const PING_INTERVAL = 15 * 60 * 1000; // 15 minutes
 setInterval(() => {
   const pingUrl = `${urlBackend}/ping`;
   console.log(`Pinging server to keep alive: ${pingUrl}`);
