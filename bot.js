@@ -114,7 +114,7 @@ app.get('/fetchLeaderboard', async (req, res) => {
     const leaderboard = await query(
       `SELECT username, score FROM leaderboard
        ORDER BY score DESC, created_at ASC
-       LIMIT 10`
+       LIMIT 25`
     );
 
     res.json({ success: true, leaderboard });
