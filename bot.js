@@ -4,6 +4,8 @@ const express = require('express');
 const cors = require('cors');
 const https = require('https');
 const path = require('path');
+// Import the database module
+const { query } = require('./db');
 
 const TOKEN = process.env.TELEGRAM_TOKEN;
 const gameName = process.env.TELEGRAM_GAMENAME;
@@ -71,16 +73,34 @@ app.get('/', function (req, res) {
 
 // API endpoint to submit a score
 app.post('/submitScore', async (req, res) => {
-  const { userId, score } = req.body;
+  const { userId, username, score, web3wallet } = req.body;
 
-  if (!userId || !score) {
-    return res.status(400).json({ success: false, error: 'Missing userId or score' });
+  if (!userId || !username || score === undefined) {
+    return res.status(400).json({ success: false, error: 'Missing required fields' });
   }
 
   try {
-    const response = await bot.setGameScore(userId, score, { chat_id: userId });
-    console.log('Score submitted:', response);
-    res.json({ success: true, data: response });
+    // Check if the user already exists
+    const existingUser = await query('SELECT * FROM leaderboard WHERE user_id = $1', [userId]);
+
+    if (existingUser.length > 0) {
+      // Update the user's score if it's higher than their existing score
+      await query(
+        `UPDATE leaderboard
+         SET score = GREATEST(score, $1), username = $2, web3wallet = $3, created_at = CURRENT_TIMESTAMP
+         WHERE user_id = $4`,
+        [score, username, web3wallet, userId]
+      );
+    } else {
+      // Insert new user score
+      await query(
+        `INSERT INTO leaderboard (user_id, username, score, web3wallet)
+         VALUES ($1, $2, $3, $4)`,
+        [userId, username, score, web3wallet]
+      );
+    }
+
+    res.json({ success: true, message: 'Score submitted successfully' });
   } catch (error) {
     console.error('Error submitting score:', error);
     res.status(500).json({ success: false, error: error.message });
@@ -88,29 +108,15 @@ app.post('/submitScore', async (req, res) => {
 });
 
 // API endpoint to fetch the leaderboard
-app.get('/leaderboard', async (req, res) => {
-  const { userId } = req.query;
-
-  if (!userId) {
-    return res.status(400).json({ success: false, error: 'Missing userId' });
-  }
-
+app.get('/fetchLeaderboard', async (req, res) => {
   try {
-    // Fetch the high scores from the Telegram bot
-    const response = await bot.getGameHighScores({ user_id: userId });
+    // Fetch top 10 scores ordered by score descending
+    const leaderboard = await query(
+      `SELECT username, score, created_at FROM leaderboard
+       ORDER BY score DESC, created_at ASC
+       LIMIT 10`
+    );
 
-    // Now, fetch the username for each player in the leaderboard
-    const leaderboard = await Promise.all(response.map(async (scoreEntry) => {
-      const user = await bot.getChat(scoreEntry.user_id);  // Fetch the user's chat information
-      return {
-        rank: scoreEntry.position,  // Optional: position can be set manually if needed
-        userId: scoreEntry.user_id,
-        username: user.username,  // Get the username from the chat data
-        score: scoreEntry.score,
-      };
-    }));
-
-    console.log('Leaderboard fetched:', leaderboard);
     res.json({ success: true, leaderboard });
   } catch (error) {
     console.error('Error fetching leaderboard:', error);
