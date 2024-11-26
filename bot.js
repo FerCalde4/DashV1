@@ -75,6 +75,10 @@ app.get('/', function (req, res) {
 app.post('/submitScore', async (req, res) => {
   const { userId, username, score, web3wallet } = req.body;
 
+  if (!username) {
+    username = "Guest"
+  }
+
   if (!userId || !username || score === undefined) {
     return res.status(400).json({ success: false, error: 'Missing required fields' });
   }
