@@ -43,10 +43,9 @@ app.use(express.static(path.join(__dirname, 'public'))); // For static assets (o
 // Matches /start
 bot.onText(/\/start/, function (msg) {
   const userId = msg.chat.id; // Numerical ID (unique)
-  const username = msg.chat.username || "Anonymous"; // Fallback to "Anonymous" if username is null
+  const username = msg.chat.username || msg.chat.first_name || msg.chat.last_name || `User#${msg.chat.id}`; // Fallback to "Anonymous" if username is null
 
-  console.log('Start command received from chat ID:', userId);
-  console.log('Username:', username);
+  console.log('Start command received from chat ID:', userId, 'Username:', username);
 
   // const gameUrlWithParams = `${url}?userId=${userId}&username=${encodeURIComponent(username)}`;
 
@@ -70,6 +69,27 @@ bot.on('callback_query', function (callbackQuery) {
 // Render the HTML game
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+
+// API endpoint to fetch Telegram user info
+app.get('/getUserInfo', (req, res) => {
+  const userId = req.query.userId;
+
+  if (!userId) {
+    return res.status(400).json({ success: false, error: 'Missing userId parameter' });
+  }
+
+  bot.getChat(userId)
+    .then(chat => {
+      const userName = chat.username || chat.first_name || chat.last_name || `User#${msg.chat.id}`; // Fallback to "Anonymous" if username is null
+
+      res.json({ success: true, username: userName });
+    })
+    .catch(err => {
+      console.error('Error fetching user info:', err);
+      res.status(500).json({ success: false, error: 'Failed to fetch user info' });
+    });
 });
 
 // API endpoint to submit a score
