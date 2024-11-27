@@ -141,7 +141,7 @@ app.get('/fetchLeaderboard', async (req, res) => {
   try {
     // Fetch top 10 scores ordered by score descending
     const leaderboard = await query(
-      `SELECT username, score FROM leaderboard
+      `SELECT user_id, username, score FROM leaderboard
        ORDER BY score DESC, created_at ASC
        LIMIT 25`
     );
