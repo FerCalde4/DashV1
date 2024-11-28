@@ -75,13 +75,15 @@ app.get('/', function (req, res) {
 // API endpoint to fetch Telegram user info
 app.get('/getUserInfo', (req, res) => {
   const userId = req.query.userId;
-
-  if (!userId) {
+  if (!userId || userId === undefined) {
+    console.log(`[getUserInfo]: Missing userId parameter'`)
     return res.status(400).json({ success: false, error: 'Missing userId parameter' });
   }
+  console.log(`[getUserInfo]: userId: ${userId}`)
 
   bot.getChat(userId)
     .then(chat => {
+      console.log(`[getUserInfo]: userId: ${userId}. username: ${chat.username}.`)
       const userName = chat.username || chat.first_name || chat.last_name || `User#${msg.chat.id}`; // Fallback to "Anonymous" if username is null
 
       res.json({ success: true, username: userName });
