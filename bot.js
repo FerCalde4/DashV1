@@ -83,7 +83,8 @@ app.get('/getUserInfo', (req, res) => {
 
   bot.getChat(userId)
     .then(chat => {
-      console.log(`[getUserInfo]: userId: ${userId}. username: ${chat.username}.`)
+      console.log(`[getUserInfo]: Full chat object:`, chat); // Log the full object
+      console.log(`[getUserInfo]: userId: ${userId}. username: ${chat.username}. first name: ${chat.first_name}. last_name: ${chat.last_name}`)
       const userName = chat.username || chat.first_name || chat.last_name || `User#${msg.chat.id}`; // Fallback to "Anonymous" if username is null
 
       res.json({ success: true, username: userName });
