@@ -85,8 +85,20 @@ app.get('/getUserInfo', (req, res) => {
     .then(chat => {
       console.log(`[getUserInfo]: Full chat object:`, chat); // Log the full object
       console.log(`[getUserInfo]: userId: ${userId}. username: ${chat.username}. first name: ${chat.first_name}. last_name: ${chat.last_name}`)
-      const userName = chat.username || chat.first_name || chat.last_name || `User#${msg.chat.id}`; // Fallback to "Anonymous" if username is null
+      let userName;
 
+      // Check each parameter explicitly
+      if (chat.username && chat.username !== undefined) {
+        userName = chat.username;
+      } else if (chat.first_name && chat.first_name !== undefined) {
+        userName = chat.first_name;
+      } else if (chat.last_name && chat.last_name !== undefined) {
+        userName = chat.last_name;
+      } else {
+        userName = `User#${userId}`; // Fallback to default value
+      }
+      
+      console.log(`[getUserInfo]: response userName: ${userName}`)
       res.json({ success: true, username: userName });
     })
     .catch(err => {
