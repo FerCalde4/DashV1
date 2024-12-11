@@ -33,6 +33,16 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
+      - name: Use Repository Secrets
+        run: |
+          echo "Using repository secrets..."
+          echo "TELEGRAM_TOKEN_DASH=${{ secrets.TELEGRAM_TOKEN_DASH }}" >> $GITHUB_ENV
+          echo "TELEGRAM_TOKEN_DEFENDERS=${{ secrets.TELEGRAM_TOKEN_DASH }}" >> $GITHUB_ENV
+          echo "TELEGRAM_GAMENAME_DASH=${{ secrets.TELEGRAM_TOKEN_DASH }}" >> $GITHUB_ENV
+          echo "TELEGRAM_GAMENAME_DEFENDERS=${{ secrets.TELEGRAM_GAMENAME_DASH }}" >> $GITHUB_ENV
+          echo "URL_DASH=${{ secrets.URL_DASH }}" >> $GITHUB_ENV
+          echo "URL_DEFENDERS=${{ secrets.URL_DEFENDERS }}" >> $GITHUB_ENV
+    
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
